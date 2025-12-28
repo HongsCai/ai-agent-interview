@@ -1,61 +1,58 @@
 import markdown
-from flask import Flask, render_template, request, redirect, url_for
-from search_job import search_jobs
-from analyse import analyse_resume
+from flask import Flask, render_template, request
+from service.job_search import job_search
+from service.resume_analysis import resume_analysis
 
 app = Flask(__name__)
 
+# 主页
 @app.route('/')
 def begin():
     return render_template('search.html')
 
-@app.route('/analyse/', methods=['POST', 'GET'])
-def analyse():
+# 简历分析
+@app.route('/resume/', methods=['POST', 'GET'])
+def resume():
     if request.method == 'GET':
-        return render_template('analyse.html')
-
+        return render_template('resume_analysis.html')
+    print("简历分析")
     position = request.form.get('position')
     file = request.files['resume']
-
-    output, score = analyse_resume(position, file)
-
-    output_html = markdown.markdown(output, extensions=['extra'])
-
-
-    return render_template('analyse_result.html', output=output_html, score=score)
+    print("参数:", position, file)
+    output, score = resume(position, file)
+    return render_template('resume_result.html', output=output, score=score)
 
 
+# 面试
 @app.route('/interview/', methods=['POST', 'GET'])
 def interview():
     return render_template('interview.html')
 
 
-
-@app.route('/get_job/', methods=['POST', 'GET'])
-def get_job():
+# 职位查询
+@app.route('/job/', methods=['POST', 'GET'])
+def job():
     if request.method == 'GET':
         return render_template('search.html')
 
-    print("正在查询职位...")
+    print("职位查询")
 
     # 接收参数 (增加简单的容错处理)
-    jobName = request.form.get('jobName')
-
+    job_name = request.form.get('jobName')
     # 处理可能为空的数字字段
     def get_int(key, default=0):
         val = request.form.get(key)
         return int(val) if val and val.isdigit() else default
-
-    salaryMin = get_int('salaryMin', 0)
-    workExperience = get_int('workExperience', 1)
+    salary_min = get_int('salaryMin', 0)
+    work_experience = get_int('workExperience', 1)
     education = get_int('education', 1)
     city = request.form.get('city')
-    companyName = request.form.get('companyName')
+    company_name = request.form.get('companyName')
 
-    print("参数:", jobName, salaryMin, workExperience, city, companyName, education)
+    print("参数:", job_name, salary_min, work_experience, city, company_name, education)
 
     # 获取数据
-    result_data = search_jobs(jobName, salaryMin, workExperience, city, companyName, education)
+    result_data = job_search(job_name, salary_min, work_experience, city, company_name, education)
 
     return render_template("search_result.html", data=result_data)
 

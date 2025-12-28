@@ -27,7 +27,7 @@
     <div class="container">
         <h2>职位搜索</h2>
 
-        <form action="/get_job/" method="POST">
+        <form action="/job/" method="POST">
             <div class="form-group">
                 <label for="jobName">职位名称</label>
                 <input type="text" id="jobName" name="jobName" placeholder="例如：Python" required>
@@ -83,16 +83,15 @@
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="location.href='/'">
+        <div class="nav-item" onclick="location.href='/job/'">
             <span class="nav-icon">🔍</span>
             <span>工作检索</span>
         </div>
-
-        <div class="nav-item" onclick="location.href='/analyse'"> <span class="nav-icon">📋</span>
+        <div class="nav-item" onclick="location.href='/resume/'">
+            <span class="nav-icon">📋</span>
             <span>AI简历分析</span>
         </div>
-
-        <div class="nav-item" onclick="location.href='/interview'">
+        <div class="nav-item active" onclick="location.href='/interview/'">
             <span class="nav-icon">🤖</span>
             <span>AI面试</span>
         </div>

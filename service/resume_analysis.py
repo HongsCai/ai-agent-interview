@@ -1,15 +1,22 @@
-from pdf_utils import extract_text_from_pdf
+import os
+
+import markdown
+
+from utils.pdf_utils import extract_text_from_pdf
 import requests
 import json
 
-def analyse_resume(position, file):
+def resume_analysis(position, file):
 
     resume_content = extract_text_from_pdf(file)
 
     # 个人访问令牌   ###需要修改为自己的令牌token
-    personal_access_token = "pat_gRdV1uSPBNma9F5GbH2Is4hiHup9UpF6X1shQAV0xSf5VOJCX841oF8lBXy4QwMt"
-    # 应用ID（workflow_id）   ###需要修改为自己的搜索职位的工作流ID
-    workflow_id = "7588457228458295359"
+    personal_access_token = os.getenv('PERSONAL_ACCESS_TOKEN')
+    # 工作流ID（workflow_id）
+    workflow_id = os.getenv('WORKFLOW_ID_RESUME_ANALYSIS')
+    # 应用ID（app_id）
+    app_id = os.getenv('APP_ID')
+
 
     # 构造请求头
     headers = {
@@ -25,7 +32,7 @@ def analyse_resume(position, file):
         ### 注意：字典中的key要求与工作流中的入口参数保持一致
         "parameters": {"resume": resume_content, "position": position},  # 将input_text传递给input参数
         ### 需要修改为自己的工作流项目ID
-        "app_id": "7588035589828968463"
+        "app_id": app_id
     }
 
     print(payload)
@@ -48,8 +55,8 @@ def analyse_resume(position, file):
 
         print('========', output)
         print('========', score)
+        return markdown.markdown(output, extensions=['extra']), score
 
-        return output, score
     else:
         print("请求失败，状态码：", response.status_code)
         print("错误信息：", response.text)

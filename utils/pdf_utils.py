@@ -1,6 +1,4 @@
 import pdfplumber
-import io
-
 
 def extract_text_from_pdf(file_source):
     """
@@ -8,6 +6,7 @@ def extract_text_from_pdf(file_source):
     :param file_source: 文件路径(str) 或 文件对象(FileStorage/BytesIO)
     :return: 提取出的字符串文本
     """
+
     text_content = []
 
     try:
@@ -28,10 +27,3 @@ def extract_text_from_pdf(file_source):
     except Exception as e:
         print(f"PDF解析发生错误: {e}")
         return None
-
-
-# 测试代码（如果你想单独运行这个文件测试的话）
-if __name__ == '__main__':
-    # 假设你有一个本地文件 test.pdf
-    # print(PdfUtils.extract_text_from_pdf("test.pdf"))
-    pass
