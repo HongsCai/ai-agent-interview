@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>职位搜索</title>
+    <style>
+        /* 样式保持不变 */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; padding-bottom: 80px; }
+        .container { background-color: #ffffff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 400px; margin-bottom: 20px; box-sizing: border-box; }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #666; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background-color: white; font-size: 14px; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
+        button:hover { background-color: #0056b3; }
+
+        /* 底部导航栏 */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000; }
+        .nav-item { flex: 1; text-align: center; color: #999; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
+        .nav-item.active { color: #007bff; }
+        .nav-icon { font-size: 20px; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>职位搜索</h2>
+
+        <form action="/get_job/" method="POST">
+            <div class="form-group">
+                <label for="jobName">职位名称</label>
+                <input type="text" id="jobName" name="jobName" placeholder="例如：Python" required>
+            </div>
+
+            <div class="form-group">
+                <label for="salaryMin">最低期望薪资</label>
+                <input type="number" id="salaryMin" name="salaryMin" placeholder="例如：2000">
+            </div>
+
+            <div class="form-group">
+                <label for="city">城市</label>
+                <input type="text" id="city" name="city" placeholder="例如：北京">
+            </div>
+
+            <div class="form-group">
+                <label for="workExperience">工作经验</label>
+                <select id="workExperience" name="workExperience">
+                    <option value="1">无经验</option>
+                    <option value="2">1年以下</option>
+                    <option value="3">1-3年</option>
+                    <option value="4">3-5年</option>
+                    <option value="5">5-10年</option>
+                    <option value="6">10年以上</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="education">学历要求</label>
+                <select id="education" name="education">
+                    <option value="1">不限</option>
+                    <option value="2">初中及以下</option>
+                    <option value="3">中技</option>
+                    <option value="4">高中</option>
+                    <option value="5">中专/中技</option>
+                    <option value="6">大专</option>
+                    <option value="7">本科</option>
+                    <option value="8">硕士</option>
+                    <option value="9">MBA/EMBA</option>
+                    <option value="10">EMBA</option>
+                    <option value="11">博士</option>
+                    <option value="12">其他</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="companyName">公司名称 (选填)</label>
+                <input type="text" id="companyName" name="companyName">
+            </div>
+
+            <button type="submit">开始搜索</button>
+        </form>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="location.href='/'">
+            <span class="nav-icon">🔍</span>
+            <span>工作检索</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='/analyse'"> <span class="nav-icon">📋</span>
+            <span>AI简历分析</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='/interview'">
+            <span class="nav-icon">🤖</span>
+            <span>AI面试</span>
+        </div>
+    </nav>
+
+</body>
+</html>
