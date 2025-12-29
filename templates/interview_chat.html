@@ -91,7 +91,6 @@
 
         .btn-prev { background: #f8f9fa; color: #666; border: 1px solid #e9ecef; }
         .btn-prev:hover { background: #e2e6ea; color: #333; }
-        /* 禁用状态 */
         .btn-prev:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .btn-next { background: #007bff; color: white; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); }
@@ -106,11 +105,11 @@
         }
         .submit-btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
 
-        /* --- 底部导航栏 --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 1000; border-top: 1px solid #eee; }
-        .nav-item { flex: 1; text-align: center; color: #aaa; font-size: 11px; text-decoration: none; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; transition: color 0.3s; }
-        .nav-item.active { color: #007bff; font-weight: 600; }
-        .nav-icon { font-size: 22px; margin-bottom: 4px; }
+        /* 底部导航栏 */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000; }
+        .nav-item { flex: 1; text-align: center; color: #999; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
+        .nav-item.active { color: #007bff; }
+        .nav-icon { font-size: 20px; margin-bottom: 3px; }
     </style>
 </head>
 <body>
@@ -139,17 +138,19 @@
 
         <div class="interview-op">
             <button class="btn btn-prev" id="prevBtn" onclick="prevQuestion()" disabled>⬅ 上一题</button>
-
             <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">下一题 ➡</button>
-
             <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">
                 <span>✨ 提交并让 AI 分析</span>
             </button>
         </div>
     </div>
 
-    <form id="interviewForm" action="/submit_interview/" method="POST" style="display:none;">
+    <form id="interviewForm" action="/interview/chat/" method="POST" style="display:none;">
         <input type="hidden" name="answers" id="finalAnswersInput">
+        <input type="hidden" name="history" value="{{ output }}">
+        <input type="hidden" name="resume_content" value="{{ text }}">
+        <input type="hidden" name="position" value="{{ position }}">
+        <input type="hidden" name="experience" value="{{ experience }}">
     </form>
 
     <nav class="bottom-nav">
@@ -167,119 +168,100 @@
         </div>
     </nav>
 
-{#<script>#}
-{#    // 1. 从后端获取题目数组 (Jinja2 语法)#}
-{#    // 注意：如果是纯静态测试，请手动定义 const problems = ["Q1", "Q2"...];#}
-{#    // const problems = {{ problems | tojson }};#}
-{#    const problems = [#}
-{#        "Q1: 你最喜欢什么类型的电影？",#}
-{#        "Q2: 你最喜欢什么类型的电影？",#}
-{#        "Q3: 你最喜欢什么类型的电影？",#}
-{#        "Q4: 你最喜欢什么类型的电影？",#}
-{#        "Q5: 你最喜欢什么类型的电影？",#}
-{#        "Q6: 你最喜欢什么类型的电影？"#}
-{#    ];#}
-{##}
-{#    // 初始化状态#}
-{#    let currentIndex = 0;#}
-{#    const totalQuestions = problems.length;#}
-{#    // 创建一个数组来保存用户的回答，长度与题目数量一致#}
-{#    let userAnswers = new Array(totalQuestions).fill("");#}
-{##}
-{#    // 获取 DOM 元素#}
-{#    const progressBar = document.getElementById('progressBar');#}
-{#    const progressText = document.getElementById('progressText');#}
-{#    const questionContent = document.getElementById('questionContent');#}
-{#    const answerInput = document.getElementById('answerInput');#}
-{#    const wordCount = document.getElementById('wordCount');#}
-{#    const prevBtn = document.getElementById('prevBtn');#}
-{#    const nextBtn = document.getElementById('nextBtn');#}
-{#    const submitBtn = document.getElementById('submitBtn');#}
-{#    const form = document.getElementById('interviewForm');#}
-{#    const finalAnswersInput = document.getElementById('finalAnswersInput');#}
-{##}
-{#    // 初始化页面#}
-{#    renderQuestion();#}
-{##}
-{#    // 监听输入，实时保存答案到数组#}
-{#    answerInput.addEventListener('input', function() {#}
-{#        const text = this.value;#}
-{#        userAnswers[currentIndex] = text; // 保存当前题目的答案#}
-{#        wordCount.textContent = text.length + ' 字';#}
-{#    });#}
-{##}
-{#    // 渲染当前题目逻辑#}
-{#    function renderQuestion() {#}
-{#        // 1. 更新题目文字#}
-{#        questionContent.textContent = problems[currentIndex];#}
-{##}
-{#        // 2. 更新输入框内容 (回显之前填写的答案)#}
-{#        answerInput.value = userAnswers[currentIndex] || "";#}
-{#        wordCount.textContent = answerInput.value.length + ' 字';#}
-{##}
-{#        // 3. 更新进度条和页码#}
-{#        const progressPercent = ((currentIndex + 1) / totalQuestions) * 100;#}
-{#        progressBar.style.width = progressPercent + '%';#}
-{#        progressText.textContent = `${currentIndex + 1}/${totalQuestions}`;#}
-{##}
-{#        // 4. 控制按钮状态#}
-{#        // 上一题按钮#}
-{#        prevBtn.disabled = (currentIndex === 0);#}
-{##}
-{#        // 下一题/提交按钮#}
-{#        if (currentIndex === totalQuestions - 1) {#}
-{#            // 最后一题：隐藏下一题，显示提交#}
-{#            nextBtn.style.display = 'none';#}
-{#            submitBtn.style.display = 'flex';#}
-{#        } else {#}
-{#            // 不是最后一题：显示下一题，隐藏提交#}
-{#            nextBtn.style.display = 'flex';#}
-{#            submitBtn.style.display = 'none';#}
-{#        }#}
-{#    }#}
-{##}
-{#    // 点击下一题#}
-{#    function nextQuestion() {#}
-{#        // 简单校验 (可选)#}
-{#        /* if (!answerInput.value.trim()) {#}
-{#            alert("请先输入回答~");#}
-{#            return;#}
-{#        }#}
-{#        */#}
-{##}
-{#        if (currentIndex < totalQuestions - 1) {#}
-{#            currentIndex++;#}
-{#            renderQuestion();#}
-{#        }#}
-{#    }#}
-{##}
-{#    // 点击上一题#}
-{#    function prevQuestion() {#}
-{#        if (currentIndex > 0) {#}
-{#            currentIndex--;#}
-{#            renderQuestion();#}
-{#        }#}
-{#    }#}
-{##}
-{#    // 提交所有答案#}
-{#    function submitAnswer() {#}
-{##}
-{#        if(confirm("确定要提交所有回答并生成报告吗？")) {#}
-{#            // 1. 将答案数组转为 JSON 字符串#}
-{#            const answersJson = JSON.stringify(userAnswers);#}
-{##}
-{#            // 2. 赋值给隐藏表单#}
-{#            finalAnswersInput.value = answersJson;#}
-{##}
-{#            // 3. 提交表单 (后端会处理跳转)#}
-{#            // 简单的加载动画#}
-{#            submitBtn.innerHTML = '<span>⏳ 处理中...</span>';#}
-{#            submitBtn.disabled = true;#}
-{##}
-{#            form.submit();#}
-{#        }#}
-{#    }#}
-{#</script>#}
+    <script>
+        // --- 核心逻辑开始 ---
 
+        // 1. 接收 Flask 传来的 output 数据 (Jinja2 渲染)
+        const rawOutput = {{ output | tojson }};
+        console.log("收到的原始题目数据:", rawOutput);
+
+        // 2. 提取问题文本
+        // 根据您提供的 JSON 结构，题目文本在 "question" 字段中
+        let problems = [];
+
+        if (Array.isArray(rawOutput)) {
+            problems = rawOutput.map(item => {
+                return item.question;
+            });
+        } else {
+            problems = ["未获取到题目数据"];
+        }
+
+        // 初始化状态
+        let currentIndex = 0;
+        const totalQuestions = problems.length;
+        let userAnswers = new Array(totalQuestions).fill("");
+
+        // 获取 DOM 元素
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const questionContent = document.getElementById('questionContent');
+        const answerInput = document.getElementById('answerInput');
+        const wordCount = document.getElementById('wordCount');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const form = document.getElementById('interviewForm');
+        const finalAnswersInput = document.getElementById('finalAnswersInput');
+
+        // 初始化页面
+        renderQuestion();
+
+        // 监听输入
+        answerInput.addEventListener('input', function() {
+            const text = this.value;
+            userAnswers[currentIndex] = text;
+            wordCount.textContent = text.length + ' 字';
+        });
+
+        // 渲染当前题目
+        function renderQuestion() {
+            questionContent.textContent = problems[currentIndex];
+            answerInput.value = userAnswers[currentIndex] || "";
+            wordCount.textContent = answerInput.value.length + ' 字';
+
+            const progressPercent = ((currentIndex + 1) / totalQuestions) * 100;
+            progressBar.style.width = progressPercent + '%';
+            progressText.textContent = `${currentIndex + 1}/${totalQuestions}`;
+
+            prevBtn.disabled = (currentIndex === 0);
+
+            if (currentIndex === totalQuestions - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'flex';
+            } else {
+                nextBtn.style.display = 'flex';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        // 导航函数
+        function nextQuestion() {
+            if (currentIndex < totalQuestions - 1) {
+                currentIndex++;
+                renderQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        // 提交
+        function submitAnswer() {
+            if(confirm("确定要提交所有回答并让 AI 进行评估吗？")) {
+                const answersJson = JSON.stringify(userAnswers);
+                finalAnswersInput.value = answersJson;
+
+                submitBtn.innerHTML = '<span>⏳ 分析中...</span>';
+                submitBtn.disabled = true;
+
+                form.submit();
+            }
+        }
+    </script>
 </body>
 </html>

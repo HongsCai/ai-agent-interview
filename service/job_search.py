@@ -3,8 +3,21 @@ import os
 import requests
 import json
 
-# 搜索岗位
+
 def job_search(job_name, salary_min, work_experience, city, company_name, education):
+    """
+    搜索岗位
+    :param job_name:
+    :param salary_min:
+    :param work_experience:
+    :param city:
+    :param company_name:
+    :param education:
+    :return:
+    """
+
+
+
     # 个人访问令牌   ###需要修改为自己的令牌token
     personal_access_token = os.getenv('PERSONAL_ACCESS_TOKEN')
     # 工作流ID（workflow_id）
@@ -39,24 +52,11 @@ def job_search(job_name, salary_min, work_experience, city, company_name, educat
     )
 
     if response.ok:
-        print("请求成功，返回数据：")
-        print(response.text)
-        res = response.text
-
-        #获取需要的数据
-        data1 = json.loads(res)['data']
-        print('========',data1)
-        # output = json.loads(data1)['jobdata']
-        output = json.loads(data1)['output']
+        data = json.loads(json.loads(response.text)['data'])
+        output = data['output']
         print('========', output)
-        data = []
 
-        for i in output:
-            data.append(i)
-
-        print('++++++++++++++++',data)
-
-        return data
+        return output
     else:
         print("请求失败，状态码：", response.status_code)
         print("错误信息：", response.text)

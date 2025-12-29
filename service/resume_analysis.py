@@ -49,9 +49,9 @@ def resume_analysis(position, file):
         res = response.text
 
         # 获取需要的数据
-        data1 = json.loads(res)['data']
-        output = json.loads(data1)['output']
-        score = int(json.loads(data1)['score'])
+        data = json.loads(json.loads(res)['data'])
+        output = data['output']
+        score = int(data['score'])
 
         print('========', output)
         print('========', score)
