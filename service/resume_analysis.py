@@ -46,10 +46,10 @@ def resume_analysis(position, file):
 
     if response.ok:
 
-        res = response.text
+        print(response.text)
 
         # 获取需要的数据
-        data = json.loads(json.loads(res)['data'])
+        data = json.loads(json.loads(response.text)['data'])
         output = data['output']
         score = int(data['score'])
 

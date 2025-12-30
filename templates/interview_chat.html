@@ -5,111 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 模拟面试</title>
     <style>
-        /* --- 全局样式 --- */
         * { box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            padding-bottom: 90px;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fc; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; padding-bottom: 90px; }
 
         .container {
-            background-color: #ffffff;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 16px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            background-color: #ffffff; width: 100%; max-width: 500px; border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1); overflow: hidden;
+            display: flex; flex-direction: column; position: relative;
         }
 
-        /* --- 顶部 Header --- */
-        .header {
-            padding: 20px 25px;
-            border-bottom: 1px solid #f0f0f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .header { padding: 20px 25px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
         .header h2 { margin: 0; font-size: 18px; color: #333; font-weight: 700; }
-        .progress-text { font-size: 14px; color: #007bff; font-weight: 600; }
+        .progress-text { font-size: 14px; color: #667eea; font-weight: 600; }
 
-        /* 进度条 */
         .progress-container { height: 4px; background: #f0f0f0; width: 100%; }
         .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #007bff, #00c6ff);
-            width: 0%; /* JS动态控制 */
-            transition: width 0.3s ease;
-            border-radius: 0 4px 4px 0;
+            height: 100%; background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%; transition: width 0.3s ease; border-radius: 0 4px 4px 0;
         }
 
-        /* --- 问题区域 --- */
         .interview-problem { padding: 25px; background-color: #fff; min-height: 120px; }
         .q-tag {
-            display: inline-block; background: #eef5ff; color: #007bff;
-            padding: 4px 10px; border-radius: 20px; font-size: 12px;
-            font-weight: bold; margin-bottom: 12px;
+            display: inline-block; background: #f3e5f5; color: #6f42c1;
+            padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 12px;
         }
-        .q-content { font-size: 18px; font-weight: 600; color: #222; line-height: 1.5; }
+        .q-content { font-size: 18px; font-weight: 600; color: #2d3748; line-height: 1.5; }
 
-        /* --- 回答区域 --- */
         .interview-answer { padding: 0 25px 20px 25px; position: relative; }
         .answer-box {
-            width: 100%; padding: 15px; border-radius: 12px;
-            border: 2px solid #eee; background-color: #fcfcfc;
-            font-size: 15px; line-height: 1.6; resize: none;
-            outline: none; transition: all 0.3s ease; color: #333;
-            min-height: 180px;
+            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #e2e8f0;
+            background-color: #fcfcfc; font-size: 15px; line-height: 1.6; resize: none;
+            outline: none; transition: all 0.3s ease; color: #333; min-height: 180px;
         }
-        .answer-box:focus {
-            border-color: #007bff; background-color: #fff;
-            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
-        }
+        .answer-box:focus { border-color: #667eea; background-color: #fff; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
         .word-count { text-align: right; font-size: 12px; color: #999; margin-top: 5px; }
 
-        /* --- 操作按钮区域 --- */
         .interview-op {
-            padding: 20px 25px; background-color: #fff;
-            border-top: 1px solid #f5f5f5;
+            padding: 20px 25px; background-color: #fff; border-top: 1px solid #f5f5f5;
             display: flex; gap: 10px; justify-content: space-between;
         }
 
-        .btn {
-            flex: 1; padding: 12px; border-radius: 10px; font-size: 15px;
-            font-weight: 600; cursor: pointer; border: none;
-            transition: all 0.2s; display: flex; justify-content: center; align-items: center;
-        }
-
+        .btn { flex: 1; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; display: flex; justify-content: center; align-items: center; }
         .btn-prev { background: #f8f9fa; color: #666; border: 1px solid #e9ecef; }
         .btn-prev:hover { background: #e2e6ea; color: #333; }
         .btn-prev:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .btn-next { background: #007bff; color: white; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); }
-        .btn-next:hover { background: #0069d9; transform: translateY(-1px); }
+        .btn-next { background: #667eea; color: white; box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3); }
+        .btn-next:hover { background: #5a67d8; transform: translateY(-1px); }
 
         .submit-btn {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-            display: none; /* 默认隐藏 */
-            flex: 1; padding: 12px; border-radius: 10px; font-size: 15px;
-            font-weight: 600; cursor: pointer; border: none;
+            background: linear-gradient(135deg, #28a745, #20c997); color: white;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); display: none; flex: 1;
+            padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; border: none;
         }
         .submit-btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
 
-        /* 底部导航栏 */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; color: #999; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
-        .nav-item.active { color: #007bff; }
-        .nav-icon { font-size: 20px; margin-bottom: 3px; }
+        /* 底部导航栏 - 面试页激活紫色 */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+        .nav-item { flex: 1; text-align: center; color: #999; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-decoration: none; }
+        .nav-item.active { color: #6f42c1; font-weight: 600; }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -126,9 +81,7 @@
 
         <div class="interview-problem">
             <div class="q-tag">当前问题</div>
-            <div class="q-content" id="questionContent">
-                加载中...
-            </div>
+            <div class="q-content" id="questionContent">加载中...</div>
         </div>
 
         <div class="interview-answer">
@@ -154,45 +107,31 @@
     </form>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="location.href='/job/'">
+        <a href="/job/" class="nav-item">
             <span class="nav-icon">🔍</span>
             <span>工作检索</span>
-        </div>
-        <div class="nav-item" onclick="location.href='/resume/'">
+        </a>
+        <a href="/resume/" class="nav-item">
             <span class="nav-icon">📋</span>
             <span>AI简历分析</span>
-        </div>
-        <div class="nav-item active" onclick="location.href='/interview/'">
+        </a>
+        <a href="/interview/" class="nav-item active">
             <span class="nav-icon">🤖</span>
-            <span>AI面试</span>
-        </div>
+            <span>AI面试官</span>
+        </a>
+        <a href="/cheer/" class="nav-item">
+            <span class="nav-icon">💖</span>
+            <span>AI鼓励师</span>
+        </a>
     </nav>
 
     <script>
-        // --- 核心逻辑开始 ---
-
-        // 1. 接收 Flask 传来的 output 数据 (Jinja2 渲染)
         const rawOutput = {{ output | tojson }};
-        console.log("收到的原始题目数据:", rawOutput);
-
-        // 2. 提取问题文本
-        // 根据您提供的 JSON 结构，题目文本在 "question" 字段中
-        let problems = [];
-
-        if (Array.isArray(rawOutput)) {
-            problems = rawOutput.map(item => {
-                return item.question;
-            });
-        } else {
-            problems = ["未获取到题目数据"];
-        }
-
-        // 初始化状态
+        let problems = Array.isArray(rawOutput) ? rawOutput.map(item => item.question) : ["未获取到题目"];
         let currentIndex = 0;
         const totalQuestions = problems.length;
         let userAnswers = new Array(totalQuestions).fill("");
 
-        // 获取 DOM 元素
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
         const questionContent = document.getElementById('questionContent');
@@ -204,17 +143,14 @@
         const form = document.getElementById('interviewForm');
         const finalAnswersInput = document.getElementById('finalAnswersInput');
 
-        // 初始化页面
         renderQuestion();
 
-        // 监听输入
         answerInput.addEventListener('input', function() {
             const text = this.value;
             userAnswers[currentIndex] = text;
             wordCount.textContent = text.length + ' 字';
         });
 
-        // 渲染当前题目
         function renderQuestion() {
             questionContent.textContent = problems[currentIndex];
             answerInput.value = userAnswers[currentIndex] || "";
@@ -225,7 +161,6 @@
             progressText.textContent = `${currentIndex + 1}/${totalQuestions}`;
 
             prevBtn.disabled = (currentIndex === 0);
-
             if (currentIndex === totalQuestions - 1) {
                 nextBtn.style.display = 'none';
                 submitBtn.style.display = 'flex';
@@ -235,30 +170,17 @@
             }
         }
 
-        // 导航函数
         function nextQuestion() {
-            if (currentIndex < totalQuestions - 1) {
-                currentIndex++;
-                renderQuestion();
-            }
+            if (currentIndex < totalQuestions - 1) { currentIndex++; renderQuestion(); }
         }
-
         function prevQuestion() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                renderQuestion();
-            }
+            if (currentIndex > 0) { currentIndex--; renderQuestion(); }
         }
-
-        // 提交
         function submitAnswer() {
             if(confirm("确定要提交所有回答并让 AI 进行评估吗？")) {
-                const answersJson = JSON.stringify(userAnswers);
-                finalAnswersInput.value = answersJson;
-
+                finalAnswersInput.value = JSON.stringify(userAnswers);
                 submitBtn.innerHTML = '<span>⏳ 分析中...</span>';
                 submitBtn.disabled = true;
-
                 form.submit();
             }
         }

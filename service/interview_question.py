@@ -50,6 +50,7 @@ def interview_question(file, position, experience):
     )
 
     if response.ok:
+        print(response.text)
         output = json.loads(json.loads(response.text)['data'])['output']
         return output, resume
 

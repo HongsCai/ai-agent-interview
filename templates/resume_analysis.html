@@ -5,43 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 简历分析</title>
     <style>
-        /* 样式保持不变 */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; padding-bottom: 80px; }
-        .container { background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 500px; box-sizing: border-box; }
-        .header-bar { width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; }
-        .header-title { font-size: 20px; color: #333; font-weight: bold; margin: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; padding-bottom: 90px; }
+        
+        .header-bar { text-align: center; margin-bottom: 25px; }
+        .header-title { font-size: 24px; color: #333; font-weight: 800; margin: 0; }
+        .header-desc { color: #666; font-size: 14px; margin-top: 5px; }
+
+        .container { background-color: #ffffff; padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; max-width: 500px; box-sizing: border-box; }
 
         .upload-area {
-            border: 2px dashed #4a90e2; border-radius: 12px; background-color: #fcfcfc;
-            padding: 40px 20px; text-align: center; cursor: pointer; transition: background-color 0.3s, border-color 0.3s;
+            border: 2px dashed #4a90e2; border-radius: 12px; background-color: #f8fbff;
+            padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.3s;
             margin-bottom: 20px; position: relative;
         }
-        .upload-area.drag-over { background-color: #eef6ff; border-color: #0056b3; }
+        .upload-area:hover, .upload-area.drag-over { background-color: #eef6ff; border-color: #0056b3; transform: scale(1.01); }
         .folder-icon { font-size: 48px; margin-bottom: 10px; display: block; }
-        .upload-title { font-size: 18px; font-weight: bold; color: #333; margin: 5px 0; }
-        .upload-desc { font-size: 14px; color: #999; margin-bottom: 8px; }
-        .upload-limit { font-size: 12px; color: #bbb; }
+        .upload-title { font-size: 16px; font-weight: bold; color: #444; margin: 5px 0; }
+        .upload-desc { font-size: 13px; color: #999; margin-bottom: 8px; }
 
-        .file-info { display: none; margin-top: 10px; padding: 10px; background: #eef5ff; border-radius: 5px; color: #007bff; font-size: 14px; word-break: break-all; }
+        .file-info { display: none; margin-top: 15px; padding: 10px; background: #e6f7ff; border: 1px solid #91d5ff; border-radius: 6px; color: #0050b3; font-size: 14px; }
 
         .input-group { margin-bottom: 20px; width: 100%; }
-        .custom-input { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; box-sizing: border-box; background-color: #fafafa; outline: none; transition: border-color 0.3s; }
-        .custom-input:focus { border-color: #007bff; background-color: #fff; }
+        .custom-input { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; box-sizing: border-box; background-color: #fafafa; outline: none; transition: 0.3s; }
+        .custom-input:focus { border-color: #007bff; background-color: #fff; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }
 
-        .analyze-btn { width: 100%; padding: 14px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2); transition: background 0.3s; }
+        .analyze-btn { width: 100%; padding: 14px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); transition: background 0.3s; }
         .analyze-btn:hover { background-color: #0056b3; }
-        .analyze-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        .analyze-btn:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; color: #999; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
-        .nav-item.active { color: #007bff; }
-        .nav-icon { font-size: 20px; margin-bottom: 3px; }
+        /* 底部导航栏 */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+        .nav-item { flex: 1; text-align: center; color: #999; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-decoration: none; }
+        .nav-item.active { color: #007bff; font-weight: 600; }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
     <div class="header-bar">
-        <h2 class="header-title">AI 简历分析</h2>
+        <h2 class="header-title">📋 AI 简历分析</h2>
+        <div class="header-desc">深度挖掘简历亮点，匹配最佳岗位</div>
     </div>
 
     <div class="container">
@@ -52,9 +55,8 @@
             <div class="upload-area" id="dropArea">
                 <span class="folder-icon">📂</span>
                 <div id="upload-prompt">
-                    <div class="upload-title">⬆️ 上传简历</div>
-                    <div class="upload-desc">(拖拽文件至此或点击上传)</div>
-                    <div class="upload-limit">支持格式：PDF, 最大20MB</div>
+                    <div class="upload-title">点击或拖拽上传简历</div>
+                    <div class="upload-desc">仅支持 PDF 格式，最大 20MB</div>
                 </div>
                 <div id="file-display" class="file-info">
                     📄 <span id="filename-text"></span>
@@ -62,26 +64,30 @@
             </div>
 
             <div class="input-group">
-                <input type="text" id="targetPosition" name="position" class="custom-input" placeholder="请输入您要匹配的岗位 (例如: Java高级开发)" required>
+                <input type="text" id="targetPosition" name="position" class="custom-input" placeholder="请输入目标岗位 (例如: Java高级开发)" required>
             </div>
 
-            <button type="submit" id="analyzeBtn" class="analyze-btn">开始智能分析</button>
+            <button type="submit" id="analyzeBtn" class="analyze-btn">🚀 开始智能诊断</button>
         </form>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="location.href='/job/'">
+        <a href="/job/" class="nav-item">
             <span class="nav-icon">🔍</span>
             <span>工作检索</span>
-        </div>
-        <div class="nav-item" onclick="location.href='/resume/'">
+        </a>
+        <a href="/resume/" class="nav-item active">
             <span class="nav-icon">📋</span>
             <span>AI简历分析</span>
-        </div>
-        <div class="nav-item active" onclick="location.href='/interview/'">
+        </a>
+        <a href="/interview/" class="nav-item">
             <span class="nav-icon">🤖</span>
-            <span>AI面试</span>
-        </div>
+            <span>AI面试官</span>
+        </a>
+        <a href="/cheer/" class="nav-item">
+            <span class="nav-icon">💖</span>
+            <span>AI鼓励师</span>
+        </a>
     </nav>
 
     <script>
@@ -93,34 +99,20 @@
         const form = document.getElementById('analysisForm');
         const analyzeBtn = document.getElementById('analyzeBtn');
 
-        // 1. 点击区域 -> 触发文件选择
         dropArea.addEventListener('click', () => fileInput.click());
 
-        // 2. 监听文件选择变化
         fileInput.addEventListener('change', function() {
             if (this.files.length > 0) updateFileUI(this.files[0]);
         });
 
-        // 3. 拖拽高亮效果
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            }, false);
+            dropArea.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
         });
+        ['dragenter', 'dragover'].forEach(eventName => { dropArea.classList.add('drag-over'); });
+        ['dragleave', 'drop'].forEach(eventName => { dropArea.classList.remove('drag-over'); });
 
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropArea.addEventListener(eventName, () => dropArea.classList.add('drag-over'), false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, () => dropArea.classList.remove('drag-over'), false);
-        });
-
-        // 4. 处理文件放下 (核心：把拖拽的文件给到 input)
         dropArea.addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
+            const files = e.dataTransfer.files;
             if (files.length > 0) {
                 fileInput.files = files;
                 updateFileUI(files[0]);
@@ -129,26 +121,23 @@
 
         function updateFileUI(file) {
             if (file.type !== 'application/pdf') {
-                alert('请上传 PDF 格式的文件');
+                alert('仅支持 PDF 格式文件');
                 fileInput.value = '';
                 return;
             }
             filenameText.textContent = file.name;
             fileDisplay.style.display = 'block';
-            uploadPrompt.style.opacity = '0.5';
+            uploadPrompt.style.opacity = '0.3';
         }
 
-        // 5. 表单提交时的加载动画
         form.addEventListener('submit', function(e) {
             if (fileInput.files.length === 0) {
                 e.preventDefault();
                 alert('请先上传简历 PDF');
                 return;
             }
-            // 按钮变色，提示用户
-            analyzeBtn.textContent = '分析生成中...';
+            analyzeBtn.textContent = '⏳ 分析生成中...';
             analyzeBtn.disabled = true;
-            // 不需要写 fetch 代码，表单会自动跳转！
         });
     </script>
 </body>

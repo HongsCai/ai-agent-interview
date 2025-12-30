@@ -3,141 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>面试配置 - AI Interview</title>
+    <title>AI 面试官配置</title>
     <style>
-        /* --- 全局样式 --- */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fc; /* 稍微偏冷灰的背景 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            padding-bottom: 90px;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fc; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; padding-bottom: 90px; }
 
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.1); /* 紫色系的阴影 */
-            width: 100%;
-            max-width: 450px;
-            box-sizing: border-box;
-        }
+        .container { background-color: #ffffff; padding: 35px; border-radius: 16px; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1); width: 100%; max-width: 450px; box-sizing: border-box; }
 
-        /* --- 顶部 Header (差异化：增加图标) --- */
-        .header-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .ai-avatar {
-            font-size: 48px;
-            margin-bottom: 10px;
-            display: inline-block;
-            background: #f0f2f5;
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
-            border-radius: 50%;
-        }
-        .header-title {
-            font-size: 22px;
-            color: #333;
-            font-weight: 800;
-            margin: 0;
-        }
-        .header-desc {
-            color: #666;
-            font-size: 14px;
-            margin-top: 5px;
-        }
+        .header-section { text-align: center; margin-bottom: 30px; }
+        .ai-avatar { font-size: 50px; margin-bottom: 10px; display: inline-block; background: #f0f2f5; width: 90px; height: 90px; line-height: 90px; border-radius: 50%; }
+        .header-title { font-size: 24px; color: #333; font-weight: 800; margin: 0; }
+        .header-desc { color: #666; font-size: 14px; margin-top: 5px; }
 
-        /* --- 表单元素样式 --- */
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #4a5568;
-            margin-bottom: 8px;
-            margin-top: 20px;
-        }
+        .form-label { display: block; font-size: 14px; font-weight: 600; color: #4a5568; margin-bottom: 8px; margin-top: 20px; }
 
-        .custom-input, .custom-select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 15px;
-            box-sizing: border-box;
-            background-color: #fff;
-            outline: none;
-            transition: all 0.3s;
-            color: #2d3748;
-        }
-        .custom-input:focus, .custom-select:focus {
-            border-color: #667eea; /* 紫色系边框 */
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+        .custom-input, .custom-select { width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; box-sizing: border-box; background-color: #fff; outline: none; transition: all 0.3s; color: #2d3748; }
+        .custom-input:focus, .custom-select:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
 
-        /* --- 上传区域 (差异化：改为紧凑的长条卡片) --- */
-        .upload-compact {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px dashed #cbd5e0;
-            border-radius: 10px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: #f7fafc;
-            color: #718096;
-            gap: 10px;
-        }
-        .upload-compact:hover {
-            border-color: #667eea;
-            color: #5a67d8;
-            background-color: #ebf4ff;
-        }
-        .upload-compact.has-file {
-            border-style: solid;
-            border-color: #48bb78; /* 绿色表示成功 */
-            background-color: #f0fff4;
-            color: #2f855a;
-        }
-        .upload-icon { font-size: 20px; }
-        .upload-text { font-size: 14px; font-weight: 500; }
-
-        /* --- 启动按钮 (差异化：紫色渐变) --- */
-        .start-btn {
-            width: 100%;
-            padding: 15px;
-            margin-top: 30px;
-            /* 紫色渐变背景 */
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
-            transition: transform 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
+        .upload-compact { display: flex; align-items: center; justify-content: center; border: 2px dashed #cbd5e0; border-radius: 10px; padding: 15px; cursor: pointer; transition: all 0.3s; background-color: #f7fafc; color: #718096; gap: 10px; margin-top: 5px; }
+        .upload-compact:hover { border-color: #667eea; color: #5a67d8; background-color: #ebf4ff; }
+        .upload-compact.has-file { border-style: solid; border-color: #48bb78; background-color: #f0fff4; color: #2f855a; }
+        
+        .start-btn { width: 100%; padding: 16px; margin-top: 35px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3); transition: transform 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .start-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
         .start-btn:disabled { background: #cbd5e0; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* 底部导航栏 */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; color: #999; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
-        .nav-item.active { color: #007bff; }
-        .nav-icon { font-size: 20px; margin-bottom: 3px; }
+        /* 底部导航栏 - 面试页激活态为紫色 */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+        .nav-item { flex: 1; text-align: center; color: #999; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-decoration: none; }
+        .nav-item.active { color: #6f42c1; font-weight: 600; }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -146,7 +40,7 @@
         <div class="header-section">
             <div class="ai-avatar">🤖</div>
             <h2 class="header-title">面试官配置</h2>
-            <p class="header-desc">请完善信息，AI 将为您生成专属面试题目</p>
+            <p class="header-desc">定制你的专属面试场景</p>
         </div>
 
         <form id="setupForm" action="/interview/" method="POST" enctype="multipart/form-data">
@@ -167,8 +61,8 @@
             <input type="file" id="fileInput" name="resume" accept=".pdf" style="display: none;" required>
 
             <div class="upload-compact" id="uploadBtn">
-                <span class="upload-icon">📎</span>
-                <span class="upload-text" id="fileName">点击上传 PDF 简历</span>
+                <span style="font-size: 20px;">📎</span>
+                <span id="fileName">点击上传 PDF 简历</span>
             </div>
 
             <button type="submit" class="start-btn" id="startBtn">
@@ -178,18 +72,22 @@
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="location.href='/job/'">
+        <a href="/job/" class="nav-item">
             <span class="nav-icon">🔍</span>
             <span>工作检索</span>
-        </div>
-        <div class="nav-item" onclick="location.href='/resume/'">
+        </a>
+        <a href="/resume/" class="nav-item">
             <span class="nav-icon">📋</span>
             <span>AI简历分析</span>
-        </div>
-        <div class="nav-item active" onclick="location.href='/interview/'">
+        </a>
+        <a href="/interview/" class="nav-item active">
             <span class="nav-icon">🤖</span>
-            <span>AI面试</span>
-        </div>
+            <span>AI面试官</span>
+        </a>
+        <a href="/cheer/" class="nav-item">
+            <span class="nav-icon">💖</span>
+            <span>AI鼓励师</span>
+        </a>
     </nav>
 
     <script>
@@ -199,10 +97,8 @@
         const setupForm = document.getElementById('setupForm');
         const startBtn = document.getElementById('startBtn');
 
-        // 上传按钮点击逻辑
         uploadBtn.addEventListener('click', () => fileInput.click());
 
-        // 文件变化监听
         fileInput.addEventListener('change', function() {
             if (this.files.length > 0) {
                 const file = this.files[0];
@@ -211,25 +107,20 @@
                     this.value = '';
                     return;
                 }
-                // UI 变更：显示文件名，边框变绿
                 fileNameSpan.textContent = file.name;
                 uploadBtn.classList.add('has-file');
-                uploadBtn.innerHTML = `<span class="upload-icon">✅</span> <span class="upload-text">${file.name}</span>`;
+                uploadBtn.innerHTML = `<span style="font-size: 20px;">✅</span> <span>${file.name}</span>`;
             }
         });
 
-        // 表单提交
         setupForm.addEventListener('submit', function(e) {
             if (fileInput.files.length === 0) {
                 e.preventDefault();
                 alert("请上传简历以便生成针对性面试题");
                 return;
             }
-
-            // 按钮变 loading
             startBtn.innerHTML = '<span>⚡ 正在生成面试题目...</span>';
             startBtn.disabled = true;
-            // 之后浏览器会自动 POST 跳转到 /interview/ 页面
         });
     </script>
 </body>

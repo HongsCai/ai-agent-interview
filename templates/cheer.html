@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 鼓励师</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(180deg, #fff0f5 0%, #fff5ee 100%); display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; padding-bottom: 90px; }
+
+        .container { background-color: #ffffff; padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(255, 117, 140, 0.15); width: 100%; max-width: 450px; box-sizing: border-box; border: 1px solid #fff0f0; display: flex; flex-direction: column; justify-content: center; }
+
+        .header-section { text-align: center; margin-bottom: 35px; }
+        .ai-avatar { font-size: 60px; margin-bottom: 15px; display: inline-block; background: #fff0f3; width: 100px; height: 100px; line-height: 100px; border-radius: 50%; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+        
+        .header-title { font-size: 26px; color: #d63384; font-weight: 800; margin: 0; }
+        .header-desc { color: #888; font-size: 15px; margin-top: 10px; line-height: 1.6; }
+
+        .form-label { display: block; font-size: 16px; font-weight: 700; color: #664d55; margin-bottom: 15px; text-align: center; }
+
+        .upload-compact { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed #ffb6c1; border-radius: 16px; padding: 30px 20px; cursor: pointer; transition: all 0.3s; background-color: #fff5f7; color: #d63384; gap: 15px; }
+        .upload-compact:hover { border-color: #ff758c; background-color: #ffeef2; transform: scale(1.02); }
+        .upload-compact.has-file { border-style: solid; border-color: #ff9a9e; background-color: #fff0f3; color: #d63384; }
+        .upload-icon { font-size: 32px; }
+        .upload-text { font-size: 15px; font-weight: 600; }
+
+        .start-btn { width: 100%; padding: 18px; margin-top: 30px; background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 8px 25px rgba(255, 117, 140, 0.3); transition: transform 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .start-btn:hover { transform: translateY(-3px); filter: brightness(1.05); }
+        .start-btn:disabled { background: #e0d0d5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* 底部导航栏 - 鼓励师页激活态为粉色 */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); z-index: 1000; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+        .nav-item { flex: 1; text-align: center; color: #b0a0a5; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-decoration: none; transition: color 0.3s; }
+        .nav-item.active { color: #ff758c; font-weight: 600; }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-section">
+            <div class="ai-avatar">💖</div>
+            <h2 class="header-title">AI 简历鼓励师</h2>
+            <p class="header-desc">生活不易？上传你的简历<br>让我挖掘你被低估的闪光点</p>
+        </div>
+
+        <form id="praiseForm" action="/cheer/" method="POST" enctype="multipart/form-data">
+            <label class="form-label">👇 投递你的“宝藏”简历 (PDF)</label>
+            <input type="file" id="fileInput" name="resume" accept=".pdf" style="display: none;" required>
+
+            <div class="upload-compact" id="uploadBtn">
+                <span class="upload-icon">💌</span>
+                <span class="upload-text" id="fileName">点击选择文件</span>
+            </div>
+
+            <button type="submit" class="start-btn" id="startBtn">
+                <span>✨ 生成夸夸语录</span>
+            </button>
+        </form>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="/job/" class="nav-item">
+            <span class="nav-icon">🔍</span>
+            <span>工作检索</span>
+        </a>
+        <a href="/resume/" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>AI简历分析</span>
+        </a>
+        <a href="/interview/" class="nav-item">
+            <span class="nav-icon">🤖</span>
+            <span>AI面试官</span>
+        </a>
+        <a href="/cheer/" class="nav-item active">
+            <span class="nav-icon">💖</span>
+            <span>AI鼓励师</span>
+        </a>
+    </nav>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileNameSpan = document.getElementById('fileName');
+        const praiseForm = document.getElementById('praiseForm');
+        const startBtn = document.getElementById('startBtn');
+
+        uploadBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                if (file.type !== 'application/pdf') {
+                    alert("请上传 PDF 格式的简历哦~");
+                    this.value = '';
+                    return;
+                }
+                fileNameSpan.textContent = `已接收：${file.name}`;
+                uploadBtn.classList.add('has-file');
+                uploadBtn.innerHTML = `<span class="upload-icon">🎁</span> <span class="upload-text">已接收：${file.name}</span>`;
+            }
+        });
+
+        praiseForm.addEventListener('submit', function(e) {
+            if (fileInput.files.length === 0) {
+                e.preventDefault();
+                alert("不要害羞，请上传简历让我看看你有多棒！");
+                return;
+            }
+            startBtn.innerHTML = '<span>⚡ 正在提取高光时刻...</span>';
+            startBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>
