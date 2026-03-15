@@ -1,10 +1,6 @@
 from flask import Flask, render_template, request
 
-from service import resume_cheer
-from service.interview_analysis import interview_analysis
-from service.interview_question import interview_question
-from service.job_search import job_search
-from service.resume_analysis import resume_analysis
+from service import resume_cheer, interview_analysis, interview_question, job_search, resume_analysis
 
 app = Flask(__name__)
 

@@ -2,7 +2,7 @@ import os
 
 import markdown
 
-from utils.pdf_utils import extract_text_from_pdf
+from utils import extract_text_from_pdf
 import requests
 import json
 

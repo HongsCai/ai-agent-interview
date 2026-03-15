@@ -4,7 +4,7 @@ import os
 import markdown
 import requests
 
-from utils.pdf_utils import extract_text_from_pdf
+from utils import extract_text_from_pdf
 
 def resume_cheer(file):
     """
